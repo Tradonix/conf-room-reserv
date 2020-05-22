@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Conference room reservation</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "reservation/style.css" %}">
+</head>
+<body>
+    <div class="content-top">
+        <a href="/" class="btn">Lista sal</a>
+        <a href="room/new/" class="btn">Dodaj sale</a>
+    </div>
+
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="content-bottom">Made by: Dawid Andrzejewski</div>
+    {% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+{#messages.success(request, 'Successfully Sent The Message!')#}
+</body>
+</html>

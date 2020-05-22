@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        Nazwa: <input name="name" type="text" value="{{ room.name }}"><br>
+        Pojemność: <input name="capacity" type="number" value="{% if room.capacity %}{{ room.capacity }}{% else %}0{% endif %}"><br>
+        Projektor: <select name="has_projector">
+        <option value="True" {% if room.has_projector %} selected {% endif %}>True</option>
+        <option value="False" {% if not room.has_projector %} selected {% endif %}>False</option>
+        </select>
+        <br><br><br>
+        <input class="btn" type="submit" value="wyslij">
+    </form>
+{{ msg }}
+{% endblock %}
