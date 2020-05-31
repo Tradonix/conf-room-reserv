@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        Sala: {{ room.name }}<br>
+        Data: <input name="date" type="date" value="{{ reserve.date }}"><br>
+        Komentarz: <input name="comment" type="text" value="{{ reserve.comment }}"><br>
+
+        <br><br>
+        {% include 'room_reservations.html' %}
+        <br><br>
+
+        <input class="btn" type="submit" value="wyslij">
+    </form>
+{% endblock %}

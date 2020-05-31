@@ -17,6 +17,7 @@
 
     <div class="content">
         {% block content %}
+            {{ msg }}
         {% endblock %}
     </div>
 
@@ -29,6 +30,5 @@
 
     {% endif %}
 
-{#messages.success(request, 'Successfully Sent The Message!')#}
 </body>
 </html>

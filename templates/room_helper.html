@@ -1,0 +1,6 @@
+            <a href="/room/{{ room.id }}">{{ room.name }}</a>
+            o pojemnosci {{ room.capacity }}
+            {% if room.has_projector %} ma projektor {% else %} nie ma projektora {% endif %}
+            <a href="/room/modify/{{ room.id }}">Edytuj</a>
+            <a href="/room/delete/{{ room.id }}">Usun</a>
+            <a href="/room/reserve/{{ room.id }}">Rezerwuj</a>

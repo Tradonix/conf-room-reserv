@@ -1,8 +1,12 @@
+from datetime import datetime
+from time import strptime
+
 from django.contrib import messages
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.views import View
 
-from reservation.models import Room
+from reservation.models import Room, Reserve
 
 
 class ListAllRooms(View):
@@ -50,7 +54,7 @@ class AddOrModifyRoom(View):
             messages.error(request, 'Name empty!')
             flag = True
         if flag:
-            return render(request, 'room.html', {'room': r})
+            return render(request, 'room_form.html', {'room': r})
         else:
             r.save()
             messages.info(request, 'Zapisano!')
@@ -58,9 +62,9 @@ class AddOrModifyRoom(View):
 
     def get(self, request, id=0):
         if id == 0:
-            return render(request, "room.html")
+            return render(request, "room_form.html")
         else:
-            return render(request, "room.html", {'room': Room.objects.get(pk=id)})
+            return render(request, "room_form.html", {'room': Room.objects.get(pk=id)})
 
 
 class DelRoom(View):
@@ -75,3 +79,54 @@ class DelRoom(View):
             r.delete()
             messages.info(request, 'Usunieto!')
         return redirect('/')
+
+
+class AddReserve(View):
+
+    def get(self, request, id):
+        r = Room.objects.get(pk=id)
+        return render(request, "reserve.html", {'room': r, 'reservations': r.reserve_set.order_by('date')})
+
+    def post(self, request, id):
+        r = Reserve()
+        comment = request.POST['comment']
+        if comment:
+            r.comment = comment
+        date = request.POST['date']
+        if date >= str(datetime.today().date()):
+            r.date = date
+        else:
+            messages.error(request, "Nie mozna zarezerwowac na date z przeszlosci")
+            return redirect(f'/room/reserve/{id}')
+        r.room_id = Room.objects.get(pk=id)
+        try:
+            r.save()
+        except IntegrityError as e:
+            print('IntegrityError\n', e)
+            messages.error(request, 'Sala jest juz tego dnia zajeta')
+            return redirect(f'/room/reserve/{id}')
+        messages.info(request, "Zarezerwowano!")
+        return redirect('/')
+
+
+class DetailRoom(View):
+
+    def get(self, request, id):
+        r = Room.objects.get(pk=id)
+        return render(request, 'room_details.html', {'room': r, 'reservations': r.reserve_set.order_by('date')})
+
+
+class Search(View):
+
+    def get(self, request):
+        return render(request, 'room_form.html')
+
+    def post(self, request):
+        name = request.POST['name']
+        date = request.POST['date']
+        has_projector = request.POST['has_projector']
+
+        search = ''
+        if name:
+            pass
+
